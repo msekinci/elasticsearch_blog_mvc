@@ -13,10 +13,19 @@ public class BlogController : Controller
         _blogService = blogService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Search(string s = "")
+    {
+        ViewBag.SearchText = s;
+        var blogList = await _blogService.Search(s);
+        return View(blogList);
+    }
+
+
+
     // GET
     public IActionResult Save()
     {
-        ViewData["Title"] = "Save New Blog";
         return View();
     }
     

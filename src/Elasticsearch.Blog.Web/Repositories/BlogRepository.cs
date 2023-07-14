@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.QueryDsl;
 using Elasticsearch.Blog.Web.Extensions;
 
 namespace Elasticsearch.Blog.Web.Repositories;
@@ -47,6 +48,23 @@ public class BlogRepository
                                 */
         
         //Eğer yukarıdaki gibi should içindeki ifadeler birbiriylr . ile bağlanırsa AND görevi görür. .MatchBool gibi
+
+        List<Action<QueryDescriptor<Models.Blog>>> listQueries = new();
+
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            Action<QueryDescriptor<Models.Blog>> matchAll = (q) => q.MatchAll();
+            listQueries.Add(matchAll);
+        }
+        else
+        {
+            Action<QueryDescriptor<Models.Blog>> matchTitle = (q) => q.MatchBoolPrefix(m => m.Field(f => f.Title).Query(searchText));
+            Action<QueryDescriptor<Models.Blog>> matchContent = (q) => q.Match(m => m.Field(f => f.Content).Query(searchText));
+            Action<QueryDescriptor<Models.Blog>> termTags = (q) => q.Term(m => m.Field(f => f.Tags).CaseInsensitive(true).Value(searchText));
+            listQueries.Add(matchTitle);
+            listQueries.Add(matchContent);
+            listQueries.Add(termTags);
+        }
         
         var result = await _elasticsearchClient
             .SearchAsync<Models.Blog>(s => s
@@ -54,14 +72,7 @@ public class BlogRepository
                 .Size(100)
                 .Query(q => q
                     .Bool(b => b
-                        .Should(s => s
-                            .Match(m => m
-                                .Field(f => f.Title)
-                                .Query(searchText)),
-                            s => s
-                                .MatchBoolPrefix(m => m
-                                    .Field(f => f.Content)
-                                    .Query(searchText))))));
+                        .Should(listQueries.ToArray()))));
 
         return result.ConvertImmutableListWithId();
     }
