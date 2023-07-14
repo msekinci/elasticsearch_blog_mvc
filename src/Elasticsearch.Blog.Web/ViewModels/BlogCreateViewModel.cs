@@ -4,11 +4,9 @@ namespace Elasticsearch.Blog.Web.ViewModels;
 
 public record BlogCreateViewModel
 {
-    [Required]
-    public string Title { get; set; }
-    
-    [Required]
-    public string Content { get; set; }
-    
-    public List<string> Tags { get; set; } = new();
+    [Required] [Display(Name = "Title")] public string Title { get; set; } = null!;
+
+    [Required] [Display(Name = "Content")] public string Content { get; set; } = null!;
+
+    [Required] [Display(Name = "Tags")] public string Tags { get; set; } = null!;
 }

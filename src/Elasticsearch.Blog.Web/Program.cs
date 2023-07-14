@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddElastic(builder.Configuration);
+builder.Services.AddDependencies();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -25,6 +26,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Blog}/{action=Save}/{id?}");
 
 app.Run();

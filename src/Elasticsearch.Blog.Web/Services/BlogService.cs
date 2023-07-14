@@ -18,7 +18,7 @@ public class BlogService
         {
             Title = model.Title,
             Content = model.Content,
-            Tags = model.Tags.ToArray(),
+            Tags = model.Tags.Split(","),
             UserId = Guid.NewGuid(),
             Created = DateTime.Now
         };
