@@ -1,0 +1,52 @@
+@model System.Collections.Generic.List<Elasticsearch.Blog.Web.ViewModels.BlogViewModel>
+
+@{
+    ViewBag.Title = "Blogs";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="col-md-10 offset-md-1">
+        <form method="get" asp-controller="Blog" asp-action="Search">
+            <div class="mb-3">
+                <label class="form-label">Search (Title, Content)</label>
+                <input type="text" name="s" class="form-control" value="@ViewBag.SearchText"/>
+                <button type="submit" class="btn btn-primary mt-3">Search</button>
+            </div>
+        </form>
+        
+        @if (Model.Any())
+        {
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Tags</th>
+                    <th>UserId</th>
+                    <th>Created</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Title</td>
+                        <td>@item.Content</td>
+                        <td>@item.Tags</td>
+                        <td>@item.UserId</td>
+                        <td>@item.Created</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">Hiç sonuç bulunamadı!</div>
+        }
+    </div>
+</div>
+
