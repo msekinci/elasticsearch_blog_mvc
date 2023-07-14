@@ -31,5 +31,10 @@ public class BlogService
 
         return true;
     }
-    
+
+    public async Task<List<BlogViewModel>> Search(string s)
+    {
+        var blogs = await _blogRepository.SearchAsync(s);
+        return blogs.Select(x => new BlogViewModel(x.Id, x.Title, x.Content, string.Join(',', x.Tags), x.UserId, x.Created)).ToList();
+    }
 }
