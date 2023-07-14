@@ -1,0 +1,41 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Elasticsearch.Blog.Web.ViewModels.BlogCreateViewModel
+
+@{
+    ViewBag.Title = "Save Blog";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        @if (TempData["result"] != null)
+        {
+            if (TempData["result"]!.Equals("Error") )
+            {
+                <div class="alert alert-danger">@TempData["result"]!</div>
+            }else if (TempData["result"]!.Equals("Successful"))
+            {
+                <div class="alert alert-success">@TempData["result"]!</div>
+            }
+        }
+
+        <h2>Save New Blog</h2>
+        <form method="post" asp-action="Save">
+            <div class="mb-3">
+                <label class="form-label" asp-for="Title"></label>
+                <input class="form-control" type="text" asp-for="Title"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" asp-for="Content"></label>
+                <textarea class="form-control" type="text" asp-for="Content"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" asp-for="Tags"></label>
+                <input class="form-control" type="text" asp-for="Tags"/>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
